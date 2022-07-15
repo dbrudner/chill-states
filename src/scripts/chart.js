@@ -1,9 +1,19 @@
 import poolsByStateData from "../data/pools-by-state";
+import popByState from "../data/pop-by-state";
 import {
   mapPoolbyStateToChartData,
   getRange,
 } from "./pool-data-transform";
 
+let poolsPerCapitaStateMap = {};
+for (const key of Object.keys(popByState)) {
+  const poolsPerCapita =
+    poolsByStateData[key] / popByState[key];
+
+  poolsPerCapitaStateMap[key] = poolsPerCapita * 10000 || 0;
+}
+
+console.log(poolsPerCapitaStateMap);
 google.charts.load("current", {
   packages: ["geochart"],
   mapsApiKey: process.env.MAPS_KEY,
@@ -11,25 +21,20 @@ google.charts.load("current", {
 
 google.charts.setOnLoadCallback(drawRegionsMap);
 function drawRegionsMap() {
-  var data = google.visualization.arrayToDataTable([
+  const data = google.visualization.arrayToDataTable([
     [
       "Country",
       "Popularity",
       { role: "tooltip", p: { html: true } },
     ],
-    ...mapPoolbyStateToChartData(poolsByStateData),
+    ...mapPoolbyStateToChartData(poolsPerCapitaStateMap),
   ]);
-  console.log(
-    ...mapPoolbyStateToChartData(poolsByStateData)
-  );
 
   const sizeAxis = getRange(
-    Object.values(poolsByStateData)
+    Object.values(poolsPerCapitaStateMap)
   );
 
-  console.log({ sizeAxis });
-
-  var options = {
+  const options = {
     region: "US",
     resolution: "provinces",
     tooltip: {
@@ -44,10 +49,9 @@ function drawRegionsMap() {
     datalessRegionColor: "#f8bbd0",
     defaultColor: "#f5f5f5",
     sizeAxis,
-    // sizeAxis,
-    // colorAxis: { colors: ["#e7711c", "#4374e0"] }, // orange to blue
   };
-  var chart = new google.visualization.GeoChart(
+
+  const chart = new google.visualization.GeoChart(
     document.getElementById("regions_div")
   );
 

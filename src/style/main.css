@@ -1,0 +1,28 @@
+* {
+  font-family: "Lato", sans-serif;
+}
+
+html {
+  background-color: #81d4fa;
+}
+
+body {
+  max-width: 1200px;
+  margin: auto;
+  text-align: center;
+}
+
+li {
+  text-align: left;
+}
+
+ul,
+li {
+  margin: 10px 0;
+  font-size: 20px;
+}
+
+p {
+  margin: 0;
+  font-size: 20px;
+}
