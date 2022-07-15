@@ -8,6 +8,7 @@
  */
 const poolsByState = {
 	AK: 5861,
+	AL: 120363,
 	AR: 56745,
 	AZ: 431027,
 	CA: 1242498,
@@ -24,13 +25,13 @@ const poolsByState = {
 	KS: 35074,
 	KY: 99467,
 	LA: 70202,
-	// MA: 129899,
+	MA: 129899,
 	MD: 116142,
-	// MA: 27151,
+	ME: 27151,
 	MI: 282523,
 	MN: 50679,
 	MO: 117338,
-	// MI: 47597,
+	MS: 47597,
 	MT: 8862,
 	NC: 156899,
 	ND: 5322,
@@ -56,7 +57,6 @@ const poolsByState = {
 	WI: 109220,
 	WV: 38001,
 	WY: 2753,
-	total: 7907725,
 };
 
 export default poolsByState;
