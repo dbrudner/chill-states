@@ -2,6 +2,7 @@ export {};
 
 interface IData {
 	poolsByState: Record<string, number>;
+	geoJson: any;
 }
 
 declare global {
