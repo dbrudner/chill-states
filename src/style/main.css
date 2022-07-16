@@ -1,28 +1,25 @@
 * {
-  font-family: "Lato", sans-serif;
-}
-
-html {
-  background-color: #81d4fa;
+  font-family: lato;
+  /* color: white; */
 }
 
 body {
-  max-width: 1200px;
+  max-width: 800px;
   margin: auto;
+  margin-bottom: 100px;
+  /* background-color: black; */
+}
+
+h1 {
+  margin: 60px auto;
   text-align: center;
 }
 
-li {
-  text-align: left;
+#map {
+  width: 800px;
+  margin: auto;
 }
 
-ul,
 li {
-  margin: 10px 0;
-  font-size: 20px;
-}
-
-p {
-  margin: 0;
-  font-size: 20px;
+  color: black;
 }

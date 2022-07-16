@@ -1,1 +1,0 @@
-class AppStore extends Emitter {}

@@ -45,14 +45,13 @@ function drawRegionsMap() {
       colors: ["white", "blue"],
       maxValue: sizeAxis.maxValue,
     },
-    backgroundColor: "#81d4fa",
     datalessRegionColor: "#f8bbd0",
     defaultColor: "#f5f5f5",
     sizeAxis,
   };
 
   const chart = new google.visualization.GeoChart(
-    document.getElementById("regions_div")
+    document.getElementById("map")
   );
 
   chart.draw(data, options);
