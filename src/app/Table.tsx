@@ -1,7 +1,7 @@
 import React from "react";
-import poolsByStateData from "../data/pools-by-state";
-import popByState from "../data/pop-by-state";
-import stateNames from "../data/state-names";
+import pools from "../data/records/pools";
+import names from "../data/records/names";
+import population from "../data/records/population";
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import Chip from "@mui/material/Chip";
@@ -12,13 +12,14 @@ const rows = Object.entries(stateNames)
     const [abbreviation, name] = s;
     const people = popByState[abbreviation];
     const pools = poolsByStateData[abbreviation];
+    console.log({ people, pools });
     return {
       id: abbreviation,
       name,
       pools,
       people,
-      poolsPerCapita: (pools / people).toFixed(4),
-      peoplePerPool: (people / pools).toFixed(4),
+      poolsPerCapita: Number((pools / people).toFixed(4)),
+      peoplePerPool: Number((people / pools).toFixed(2)),
     };
   })
   .filter((s) => Object.values(s).every(Boolean));
