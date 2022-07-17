@@ -1,5 +1,5 @@
-import names from "./names";
-import pools from "./pools";
-import population from "./population";
+import * as denominators from "./denominators";
+import * as numerators from "./numerators";
+import * as meta from "./meta";
 
-export default { names, pools, population };
+export { denominators, numerators, meta };

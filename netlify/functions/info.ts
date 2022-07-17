@@ -1,14 +1,14 @@
 import { Handler } from "@netlify/functions";
-import * as records from "../../data/records/index";
+import * as numerators from "../../data/records/numerators";
+import * as denominators from "../../data/records/denominators";
 
 const handler: Handler = async (event, context) => {
   return {
     statusCode: 200,
     body: JSON.stringify({
-      message: "Hello World",
-      url: event.queryStringParameters,
-      event,
-      context,
+      queryStringParameters: event.queryStringParameters,
+      numerators: Object.keys(numerators),
+      denominators: Object.keys(denominators),
     }),
   };
 };

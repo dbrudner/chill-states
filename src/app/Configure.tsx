@@ -1,26 +1,32 @@
-import React from "react";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select, {
-  SelectChangeEvent,
-} from "@mui/material/Select";
 import {
   FormControlLabel,
   FormLabel,
+  Grid,
   Radio,
   RadioGroup,
-  Box,
-  Grid,
 } from "@mui/material";
+import FormControl from "@mui/material/FormControl";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import startCase from "lodash/startCase";
+import { useQuery } from "react-query";
+import useMapData from "./hooks/use-map-data";
+
+const fetchInfo = async () => {
+  const response = await fetch("/.netlify/functions/info");
+  const json = await response.json();
+  return json;
+};
 
 export default function Configure() {
-  const [option, setOption] = React.useState("pool");
+  const {
+    numerator,
+    setNumerator,
+    denominator,
+    setDenominator,
+  } = useMapData();
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setOption(event.target.value);
-    console.log(event);
-  };
+  const { data } = useQuery("info", fetchInfo);
 
   return (
     <div>
@@ -28,15 +34,17 @@ export default function Configure() {
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>
           <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">
-              Option
-            </InputLabel>
             <Select
-              value={option}
+              name="numerator"
               label="Option"
-              onChange={handleChange}
+              onChange={(e) => setNumerator(e.target.value)}
+              value={numerator}
             >
-              <MenuItem value="pool">Pool</MenuItem>
+              {data?.numerators?.map((n) => (
+                <MenuItem key={n} value={n}>
+                  {startCase(n)}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
           <FormControl sx={{ mt: 2 }}>
@@ -45,31 +53,21 @@ export default function Configure() {
             </FormLabel>
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue="perCapita"
-              name="radio-buttons-group"
+              name="denominator"
+              onChange={(e) => {
+                console.log(e.target.value);
+                setDenominator(e.target.value);
+              }}
+              value={denominator || ""}
             >
-              <FormControlLabel
-                value="total"
-                control={
-                  <Radio onChange={(e) => console.log(e)} />
-                }
-                label="Total"
-              />
-              <FormControlLabel
-                value="perCapita"
-                control={<Radio />}
-                label="Per Capita"
-              />
-              <FormControlLabel
-                value="perArea"
-                control={<Radio />}
-                label="Per Sq. Mile"
-              />
-              <FormControlLabel
-                value="perPropertyValue"
-                control={<Radio />}
-                label="Per Avg. Home Property Value"
-              />
+              {data?.denominators?.map((n) => (
+                <FormControlLabel
+                  key={n}
+                  value={n}
+                  control={<Radio />}
+                  label={startCase(n)}
+                />
+              ))}
             </RadioGroup>
           </FormControl>
         </Grid>
