@@ -7,6 +7,8 @@ const handler: Handler = async (event, context) => {
     body: JSON.stringify({
       message: "Hello World",
       url: event.queryStringParameters,
+      event,
+      context,
     }),
   };
 };
