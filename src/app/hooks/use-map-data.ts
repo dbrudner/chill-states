@@ -24,14 +24,18 @@ export const fetchMapData =
   };
 
 export default function useMapData() {
-  const [numerator, setNumerator] = useQueryParam(
-    "numerator",
-    StringParam
-  );
-  const [denominator, setDenominator] = useQueryParam(
-    "denominator",
-    StringParam
-  );
+  /**
+   * Wrapping num/denom in useState --
+   * useQueryParams is behaving strangely and not re-rendering on update
+   * This forces a re-render when the numerator/denominator values change
+   * and sets query params
+   */
+  const [numerator = "", setNumerator] = useState("");
+  const [denominator = "", setDenominator] = useState("");
+  const [queryParams, setQueryParams] = useQueryParams({
+    numerator: StringParam,
+    denominator: StringParam,
+  });
 
   const query = useQuery(
     `${numerator}/${denominator}`,
@@ -40,10 +44,12 @@ export default function useMapData() {
 
   useEffect(() => {
     query.refetch();
+    setQueryParams({ numerator, denominator });
   }, [numerator, denominator]);
 
   return {
     query,
+    queryParams,
     numerator,
     denominator,
     setNumerator,

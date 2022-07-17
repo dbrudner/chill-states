@@ -10,6 +10,10 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import startCase from "lodash/startCase";
 import { useQuery } from "react-query";
+import {
+  StringParam,
+  useQueryParam,
+} from "use-query-params";
 import useMapData from "./hooks/use-map-data";
 
 const fetchInfo = async () => {
@@ -19,14 +23,16 @@ const fetchInfo = async () => {
 };
 
 export default function Configure() {
+  const { data } = useQuery("info", fetchInfo);
+
   const {
     numerator,
-    setNumerator,
     denominator,
+    setNumerator,
     setDenominator,
   } = useMapData();
 
-  const { data } = useQuery("info", fetchInfo);
+  if (!data) return;
 
   return (
     <div>
@@ -40,7 +46,8 @@ export default function Configure() {
               onChange={(e) => setNumerator(e.target.value)}
               value={numerator}
             >
-              {data?.numerators?.map((n) => (
+              <MenuItem value="">Choose...</MenuItem>
+              {data.numerators.map((n) => (
                 <MenuItem key={n} value={n}>
                   {startCase(n)}
                 </MenuItem>
@@ -54,13 +61,17 @@ export default function Configure() {
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
               name="denominator"
-              onChange={(e) => {
-                console.log(e.target.value);
-                setDenominator(e.target.value);
-              }}
-              value={denominator || ""}
+              value={denominator}
+              onChange={(e) =>
+                setDenominator(e.target.value)
+              }
             >
-              {data?.denominators?.map((n) => (
+              <FormControlLabel
+                value="total"
+                control={<Radio />}
+                label="Total"
+              />
+              {data.denominators.map((n) => (
                 <FormControlLabel
                   key={n}
                   value={n}

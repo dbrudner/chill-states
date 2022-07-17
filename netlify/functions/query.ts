@@ -1,8 +1,6 @@
 import { Handler } from "@netlify/functions";
 import * as records from "../../data/records/index";
 
-console.log({ records });
-
 const handler: Handler = async (event, context) => {
   // These should probably be decoding the URI -- I'm assuming netlify won't encode/decode by default (it shouldn't)
   const { numerator, denominator } =
