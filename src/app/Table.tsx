@@ -1,54 +1,89 @@
-// import React from "react";
-// import pools from "../../data/records/pools";
-// import names from "../../data/records/names";
-// import population from "../../data/records/population";
-// import Box from "@mui/material/Box";
-// import { DataGrid } from "@mui/x-data-grid";
-// import Chip from "@mui/material/Chip";
-// import Button from "@mui/material/Button";
-// import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
+import { DataGrid } from "@mui/x-data-grid";
+import { map, startCase } from "lodash";
+import React, { useContext } from "react";
+import { IMapData, useMapData } from "./context/map-data";
 
-// const rows = Object.entries(stateNames)
-//   .map((s) => {
-//     const [abbreviation, name] = s;
-//     const people = popByState[abbreviation];
-//     const pools = poolsByStateData[abbreviation];
-//     console.log({ people, pools });
-//     return {
-//       id: abbreviation,
-//       name,
-//       pools,
-//       people,
-//       poolsPerCapita: Number((pools / people).toFixed(4)),
-//       peoplePerPool: Number((people / pools).toFixed(2)),
-//     };
-//   })
-//   .filter((s) => Object.values(s).every(Boolean));
+const rows = (data: IMapData) => {
+  const {
+    numerator = {} as any,
+    denominator = {} as any,
+    numeratorRanks,
+    denominatorRanks,
+  } = data || {};
 
-// const columns = [
-//   { field: "id", headerName: "" },
-//   { field: "name", headerName: "Name" },
-//   { field: "pools", headerName: "Pools" },
-//   { field: "people", headerName: "People" },
-//   {
-//     field: "poolsPerCapita",
-//     headerName: "Pools/Person",
-//   },
-//   {
-//     field: "peoplePerPool",
-//     headerName: "People/Pool",
-//   },
-// ];
+  const states = Object.keys(numerator);
 
-// export const DataTable = () => (
-//   <Box
-//     sx={{
-//       height: 600,
-//       maxWidth: "100%",
-//       margin: "auto",
-//       mt: 10,
-//     }}
-//   >
-//     <DataGrid rows={rows} columns={columns} />
-//   </Box>
-// );
+  return states.map((state) => {
+    return {
+      id: state,
+      numerator: numerator[state].toLocaleString(),
+      denominator: denominator[state].toLocaleString(),
+      numeratorPerDenominator: (
+        numerator[state] / denominator[state]
+      ).toFixed(3),
+      denominatorPerNumerator: (
+        numerator[state] / denominator[state]
+      ).toFixed(3),
+      numeratorRank: numeratorRanks[state] + 1,
+      denominatorRank: denominatorRanks[state] + 1,
+    };
+  });
+};
+
+const columns = (
+  numerator: string,
+  denominator: string
+) => {
+  const numeratorHeader = startCase(numerator);
+  const denominatorHeader = startCase(denominator);
+  return [
+    { field: "id", headerName: "" },
+    {
+      field: "numerator",
+      headerName: numeratorHeader,
+    },
+    {
+      field: "denominator",
+      headerName: denominatorHeader,
+    },
+    {
+      field: "numeratorPerDenominator",
+      headerName: `${numeratorHeader} per ${denominatorHeader}`,
+    },
+    {
+      field: "denominatorPerNumerator",
+      headerName: `${denominatorHeader} per ${numeratorHeader}`,
+    },
+    {
+      field: "numeratorRank",
+      headerName: `${numeratorHeader} rank`,
+    },
+    {
+      field: "denominatorRank",
+      headerName: `${denominatorHeader} rank`,
+    },
+  ];
+};
+
+export const Table = () => {
+  const { numerator, denominator, mapData } = useMapData();
+
+  if (!mapData || !numerator || !denominator) return null;
+
+  return (
+    <Box
+      sx={{
+        height: 600,
+        maxWidth: "100%",
+        margin: "auto",
+        mt: 10,
+      }}
+    >
+      <DataGrid
+        rows={rows(mapData)}
+        columns={columns(numerator, denominator)}
+      />
+    </Box>
+  );
+};

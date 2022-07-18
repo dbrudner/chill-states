@@ -1,4 +1,5 @@
 import { Handler } from "@netlify/functions";
+import { sortBy } from "lodash";
 import * as records from "../../data/records/index";
 
 const handler: Handler = async (event, context) => {
@@ -12,11 +13,13 @@ const handler: Handler = async (event, context) => {
     numerator: records.numerators[numerator],
     denominator: records.denominators[denominator],
     search: { numerator, denominator },
+    numeratorRanks: records.sortedRecords[numerator],
+    denominatorRanks: records.sortedRecords[denominator],
   };
 
   return {
     statusCode: 200,
-    body: JSON.stringify({ data }),
+    body: JSON.stringify(data),
   };
 };
 

@@ -1,3 +1,4 @@
+import React, { useContext } from "react";
 import {
   FormControlLabel,
   FormLabel,
@@ -10,11 +11,8 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import startCase from "lodash/startCase";
 import { useQuery } from "react-query";
-import {
-  StringParam,
-  useQueryParam,
-} from "use-query-params";
 import useMapData from "./hooks/use-map-data";
+import MapDataContext from "./context/map-data";
 
 const fetchInfo = async () => {
   const response = await fetch("/.netlify/functions/info");
@@ -24,15 +22,14 @@ const fetchInfo = async () => {
 
 export default function Configure() {
   const { data } = useQuery("info", fetchInfo);
-
   const {
     numerator,
     denominator,
     setNumerator,
     setDenominator,
-  } = useMapData();
+  } = useContext(MapDataContext);
 
-  if (!data) return;
+  if (!data) return null;
 
   return (
     <div>
@@ -47,7 +44,7 @@ export default function Configure() {
               value={numerator}
             >
               <MenuItem value="">Choose...</MenuItem>
-              {data.numerators.map((n) => (
+              {data?.numerators?.map((n) => (
                 <MenuItem key={n} value={n}>
                   {startCase(n)}
                 </MenuItem>
@@ -71,7 +68,7 @@ export default function Configure() {
                 control={<Radio />}
                 label="Total"
               />
-              {data.denominators.map((n) => (
+              {data.denominators?.map((n) => (
                 <FormControlLabel
                   key={n}
                   value={n}
