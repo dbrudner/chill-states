@@ -1,12 +1,20 @@
-import React, { useEffect, useState } from "react";
-import {
-  useMapData
-} from "./context/map-data";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { useMapData } from "./context/map-data";
 
 const HeatMap = () => {
   const [loaded, setLoaded] = useState(false);
-  const { numerator, denominator, data, isFetched } =
-    useMapData();
+  const {
+    numerator,
+    // denominator,
+    numeratorData,
+    // denominatorData,
+    isFetched,
+  } = useMapData();
 
   useEffect(() => {
     (window as any).google.charts.load("current", {
@@ -20,10 +28,10 @@ const HeatMap = () => {
   }, [drawMap]);
 
   useEffect(() => {
-    if (loaded && isFetched && numerator && denominator) {
-      drawMap(Object.entries(data.numerator), numerator);
+    if (loaded && isFetched && numerator) {
+      drawMap(Object.entries(numeratorData), numerator);
     }
-  }, [loaded, numerator, denominator, data, isFetched]);
+  }, [loaded, numerator, numeratorData, isFetched]);
 
   return <div id="map-area"></div>;
 };

@@ -1,30 +1,17 @@
-import * as denominators from "./denominators";
-import * as numerators from "./numerators";
-import * as meta from "./meta";
-import { sortBy } from "lodash";
+import areaLand from "./area-land";
+import areaTotal from "./area-total";
+import areaWater from "./area-water";
+import pools from "./pools";
+import population from "./population";
+import priceZillow from "./price-zillow";
+import price from "./price";
 
-const createRankMap = (record: Record<string, number>) => {
-  let ranks = {};
-  sortBy(
-    Object.entries(record).map((r) => {
-      const [state, value] = r;
-      return { state, value };
-    }),
-    "value"
-  )
-    .reverse()
-    .forEach((e, i) => (ranks[e.state] = i));
-  return ranks;
+export {
+  areaLand,
+  areaTotal,
+  areaWater,
+  pools,
+  population,
+  priceZillow,
+  price,
 };
-
-const toBeSorted = {
-  ...denominators,
-  ...numerators,
-};
-
-let sortedRecords = {};
-for (const r of Object.keys(toBeSorted)) {
-  sortedRecords[r] = createRankMap(toBeSorted[r]);
-}
-
-export { denominators, numerators, meta, sortedRecords };

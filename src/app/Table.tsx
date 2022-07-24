@@ -1,81 +1,84 @@
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 import { startCase } from "lodash";
-import React from "react";
+import React, { useMemo } from "react";
 import { IMapData, useMapData } from "./context/map-data";
 
-const rows = (data: IMapData) => {
-  const {
-    numerator = {} as any,
-    denominator = {} as any,
-    numeratorRanks,
-    denominatorRanks,
-  } = data;
-
-  const states = Object.keys(numerator);
-
-  return states.map((state) => {
-    return {
-      id: state,
-      numerator: numerator[state],
-      denominator: denominator[state],
-      numeratorPerDenominator:
-        numerator[state] / denominator[state],
-      denominatorPerNumerator:
-        denominator[state] / numerator[state],
-      numeratorRank: numeratorRanks[state] + 1,
-      denominatorRank: denominatorRanks[state] + 1,
-    };
-  });
-};
-
 const columns = (
-  numerator: string,
-  denominator: string
+  numerator: string
+  // denominator: string
 ) => {
   const numeratorHeader = startCase(numerator);
-  const denominatorHeader = startCase(denominator);
+  // const denominatorHeader = startCase(denominator);
 
   return [
     { field: "id", headerName: "" },
     {
-      field: "numerator",
+      field: "numeratorData",
       headerName: numeratorHeader,
       valueFormatter: ({ value }) => value.toLocaleString(),
       width: 100,
     },
+    // {
+    //   field: "denominator",
+    //   headerName: denominatorHeader,
+    //   valueFormatter: ({ value }) => value.toLocaleString(),
+    // },
+    // {
+    //   field: "numeratorPerDenominator",
+    //   headerName: `${numeratorHeader} per ${denominatorHeader}`,
+    //   valueFormatter: ({ value }) => value.toFixed(2),
+    // },
+    // {
+    //   field: "denominatorPerNumerator",
+    //   headerName: `${denominatorHeader} per ${numeratorHeader}`,
+    //   valueFormatter: ({ value }) => value.toFixed(2),
+    // },
     {
-      field: "denominator",
-      headerName: denominatorHeader,
-      valueFormatter: ({ value }) => value.toLocaleString(),
-    },
-    {
-      field: "numeratorPerDenominator",
-      headerName: `${numeratorHeader} per ${denominatorHeader}`,
-      valueFormatter: ({ value }) => value.toFixed(2),
-    },
-    {
-      field: "denominatorPerNumerator",
-      headerName: `${denominatorHeader} per ${numeratorHeader}`,
-      valueFormatter: ({ value }) => value.toFixed(2),
-    },
-    {
-      field: "numeratorRank",
+      field: "numeratorRanks",
       headerName: `${numeratorHeader} rank`,
-      valueFormatter: ({ value }) => "#" + value,
+      valueFormatter: ({ value }) => "#" + (value + 1),
     },
-    {
-      field: "denominatorRank",
-      headerName: `${denominatorHeader} rank`,
-      valueFormatter: ({ value }) => "#" + value,
-    },
+    // {
+    //   field: "denominatorRank",
+    //   headerName: `${denominatorHeader} rank`,
+    //   valueFormatter: ({ value }) => "#" + value,
+    // },
   ];
 };
 
 export const Table = () => {
-  const { numerator, denominator, data } = useMapData();
+  const {
+    numerator,
+    denominator,
+    numeratorData,
+    denominatorData,
+    numeratorRanks,
+    denominatorRanks,
+    infoData,
+    isFetched,
+  } = useMapData();
 
-  if (!data || !numerator || !denominator) return null;
+  if (!isFetched || !numeratorData || infoData.meta.name)
+    return null;
+
+  const { names } = infoData.meta;
+
+  console.log({ numeratorRanks });
+
+  const rows = Object.keys(names).map((state) => {
+    return {
+      id: names[state],
+      // numerator: numerator[state],
+      // denominator: denominator[state],
+      numeratorData: numeratorData[state],
+      // denominatorData: denominatorData[state],
+      numeratorRanks: numeratorRanks[state],
+      // denominatorRanks: denominatorRanks[state],
+    };
+  });
+
+  console.log({ rows });
 
   return (
     <Box
@@ -87,7 +90,7 @@ export const Table = () => {
       }}
     >
       <DataGrid
-        rows={rows(data)}
+        rows={rows}
         columns={columns(numerator, denominator)}
       />
     </Box>
