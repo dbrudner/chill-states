@@ -16,17 +16,13 @@
     "@mui/material": "^5.9.0",
     "@mui/x-data-grid": "^5.13.1",
     "@netlify/functions": "^1.0.0",
+    "@tanstack/react-query": "^4.0.8",
     "@types/lodash": "^4.14.182",
     "@types/node": "^18.0.5",
-    "component-emitter": "github:component/emitter",
-    "ejs": "^3.1.8",
-    "lit-html": "^2.2.6",
     "lodash": "^4.17.21",
     "parcel": "^2.6.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-query": "^3.39.2",
-    "use-query-params": "^1.2.3"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "process": "^0.11.10"

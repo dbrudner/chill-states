@@ -1,4 +1,8 @@
-import React, { useContext } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useRef,
+} from "react";
 import {
   FormControlLabel,
   FormLabel,
@@ -10,8 +14,11 @@ import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import startCase from "lodash/startCase";
-import { useQuery } from "react-query";
-import useMapData from "./hooks/use-map-data";
+import {
+  QueryClient,
+  useQuery,
+} from "@tanstack/react-query";
+import { useMapData } from "./context/map-data";
 import MapDataContext from "./context/map-data";
 
 const fetchInfo = async () => {
@@ -21,15 +28,13 @@ const fetchInfo = async () => {
 };
 
 export default function Configure() {
-  const { data } = useQuery("info", fetchInfo);
+  const { data } = useQuery(["info"], fetchInfo);
   const {
     numerator,
     denominator,
     setNumerator,
     setDenominator,
-  } = useContext(MapDataContext);
-
-  if (!data) return null;
+  } = useMapData();
 
   return (
     <div>
@@ -44,7 +49,7 @@ export default function Configure() {
               value={numerator}
             >
               <MenuItem value="">Choose...</MenuItem>
-              {data?.numerators?.map((n) => (
+              {data?.numerators.map((n) => (
                 <MenuItem key={n} value={n}>
                   {startCase(n)}
                 </MenuItem>
@@ -68,7 +73,7 @@ export default function Configure() {
                 control={<Radio />}
                 label="Total"
               />
-              {data.denominators?.map((n) => (
+              {data?.denominators.map((n) => (
                 <FormControlLabel
                   key={n}
                   value={n}

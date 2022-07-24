@@ -16,8 +16,18 @@ export interface IMapDataContext {
   setDenominator: React.Dispatch<
     React.SetStateAction<string>
   >;
-  mapData: IMapData;
+  isFetched: boolean;
+  data: IMapData;
 }
+
+const formatChartData = (data: Record<string, number>) => {
+  return Object.entries(data).map((d) => {
+    const [name, value] = d;
+    const html = "<p>hey</p>";
+
+    return [name, value, html];
+  });
+};
 
 const MapDataContext = React.createContext<IMapDataContext>(
   {
@@ -25,7 +35,8 @@ const MapDataContext = React.createContext<IMapDataContext>(
     denominator: "",
     setNumerator: () => {},
     setDenominator: () => {},
-    mapData: {
+    isFetched: false,
+    data: {
       numerator: {},
       denominator: {},
       numeratorRanks: {},

@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
-import { map, startCase } from "lodash";
-import React, { useContext } from "react";
+import { startCase } from "lodash";
+import React from "react";
 import { IMapData, useMapData } from "./context/map-data";
 
 const rows = (data: IMapData) => {
@@ -10,21 +10,19 @@ const rows = (data: IMapData) => {
     denominator = {} as any,
     numeratorRanks,
     denominatorRanks,
-  } = data || {};
+  } = data;
 
   const states = Object.keys(numerator);
 
   return states.map((state) => {
     return {
       id: state,
-      numerator: numerator[state].toLocaleString(),
-      denominator: denominator[state].toLocaleString(),
-      numeratorPerDenominator: (
-        numerator[state] / denominator[state]
-      ).toFixed(3),
-      denominatorPerNumerator: (
-        numerator[state] / denominator[state]
-      ).toFixed(3),
+      numerator: numerator[state],
+      denominator: denominator[state],
+      numeratorPerDenominator:
+        numerator[state] / denominator[state],
+      denominatorPerNumerator:
+        denominator[state] / numerator[state],
       numeratorRank: numeratorRanks[state] + 1,
       denominatorRank: denominatorRanks[state] + 1,
     };
@@ -37,39 +35,47 @@ const columns = (
 ) => {
   const numeratorHeader = startCase(numerator);
   const denominatorHeader = startCase(denominator);
+
   return [
     { field: "id", headerName: "" },
     {
       field: "numerator",
       headerName: numeratorHeader,
+      valueFormatter: ({ value }) => value.toLocaleString(),
+      width: 100,
     },
     {
       field: "denominator",
       headerName: denominatorHeader,
+      valueFormatter: ({ value }) => value.toLocaleString(),
     },
     {
       field: "numeratorPerDenominator",
       headerName: `${numeratorHeader} per ${denominatorHeader}`,
+      valueFormatter: ({ value }) => value.toFixed(2),
     },
     {
       field: "denominatorPerNumerator",
       headerName: `${denominatorHeader} per ${numeratorHeader}`,
+      valueFormatter: ({ value }) => value.toFixed(2),
     },
     {
       field: "numeratorRank",
       headerName: `${numeratorHeader} rank`,
+      valueFormatter: ({ value }) => "#" + value,
     },
     {
       field: "denominatorRank",
       headerName: `${denominatorHeader} rank`,
+      valueFormatter: ({ value }) => "#" + value,
     },
   ];
 };
 
 export const Table = () => {
-  const { numerator, denominator, mapData } = useMapData();
+  const { numerator, denominator, data } = useMapData();
 
-  if (!mapData || !numerator || !denominator) return null;
+  if (!data || !numerator || !denominator) return null;
 
   return (
     <Box
@@ -81,7 +87,7 @@ export const Table = () => {
       }}
     >
       <DataGrid
-        rows={rows(mapData)}
+        rows={rows(data)}
         columns={columns(numerator, denominator)}
       />
     </Box>
