@@ -25,16 +25,14 @@ import MapDataContext from "./context/map-data";
 
 export default function Configure() {
   const {
+    availableRecords,
     numerator,
     denominator,
     setNumerator,
     setDenominator,
     mode,
     setMode,
-    infoData,
   } = useMapData();
-
-  console.log({ infoData });
 
   return (
     <div>
@@ -51,7 +49,7 @@ export default function Configure() {
               select
             >
               <MenuItem value=""></MenuItem>
-              {infoData?.sources?.map((n) => (
+              {availableRecords.map((n) => (
                 <MenuItem key={n} value={n}>
                   {startCase(n)}
                 </MenuItem>
@@ -91,7 +89,7 @@ export default function Configure() {
               <MenuItem value="total">
                 Per each state
               </MenuItem>
-              {infoData?.sources?.map((n) => (
+              {availableRecords.map((n) => (
                 <MenuItem key={n} value={n}>
                   {startCase(n)}
                 </MenuItem>

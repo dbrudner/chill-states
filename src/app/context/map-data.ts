@@ -42,16 +42,13 @@ export interface IMapDataContext {
    */
   setMode: React.Dispatch<React.SetStateAction<string>>;
   isFetched: boolean;
+  isLoading: boolean;
   numeratorData: Record<string, number>;
   denominatorData: Record<string, number>;
   numeratorRanks: Record<string, number>;
   denominatorRanks: Record<string, number>;
-
-  /**
-   * Really need to go back and look at the whole /info setup
-   * Think there's a very clean way to do it but until now, havent paid it much attention
-   */
-  infoData: any;
+  availableRecords: string[];
+  stateNames: Record<string, string>;
 }
 
 const formatChartData = (data: Record<string, number>) => {
@@ -75,11 +72,13 @@ const MapDataContext = React.createContext<IMapDataContext>(
     setDenominator: () => {},
     setMode: () => {},
     isFetched: false,
+    isLoading: false,
     numeratorData: {},
     denominatorData: {},
     numeratorRanks: {},
     denominatorRanks: {},
-    infoData: {},
+    availableRecords: [],
+    stateNames: {},
   }
 );
 

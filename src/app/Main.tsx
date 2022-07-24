@@ -10,6 +10,9 @@ import Configure from "./Configure";
 import MapDataContext from "./context/map-data";
 import HeatMap from "./HeatMap";
 import { Table } from "./Table";
+import stateNames from "../../data/meta/names";
+import * as records from "../../data/records";
+import { Box } from "@mui/material";
 
 const queryClient = new QueryClient();
 queryClient.invalidateQueries({
@@ -43,7 +46,7 @@ function Main() {
     param.get("mode") || "total"
   );
 
-  const { data, isFetched } = useQuery(
+  const { data, isFetched, isLoading } = useQuery(
     ["fetchMapData", [numerator, denominator]],
     () => fetchMapData([numerator, denominator]),
     /**
@@ -57,7 +60,7 @@ function Main() {
     }
   );
 
-  const { data: infoData } = useQuery(["info"], fetchInfo);
+  // const { data: infoData } = useQuery(["info"], fetchInfo);
 
   useEffect(() => {
     const url = new URL(window.location.href);
@@ -105,20 +108,31 @@ function Main() {
     numeratorData,
     denominatorData,
     numeratorRanks,
-    // denominatorRanks: {},
+    denominatorRanks: {},
     setNumerator,
     setDenominator,
     mode,
     setMode,
     isFetched,
-    infoData,
+    isLoading,
+    availableRecords: Object.keys(records),
+    stateNames,
   };
 
   return (
     <MapDataContext.Provider value={mapDataContextValue}>
       <Configure />
       <HeatMap />
-      <Table />
+      <Box
+        sx={{
+          height: 600,
+          maxWidth: "100%",
+          margin: "auto",
+          mt: 10,
+        }}
+      >
+        <Table />
+      </Box>
     </MapDataContext.Provider>
   );
 }

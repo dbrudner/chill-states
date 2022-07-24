@@ -55,20 +55,15 @@ export const Table = () => {
     denominatorData,
     numeratorRanks,
     denominatorRanks,
-    infoData,
     isFetched,
+    stateNames,
   } = useMapData();
 
-  if (!isFetched || !numeratorData || infoData.meta.name)
-    return null;
+  if (!numeratorData) return null;
 
-  const { names } = infoData.meta;
-
-  console.log({ numeratorRanks });
-
-  const rows = Object.keys(names).map((state) => {
+  const rows = Object.keys(stateNames).map((state) => {
     return {
-      id: names[state],
+      id: stateNames[state],
       // numerator: numerator[state],
       // denominator: denominator[state],
       numeratorData: numeratorData[state],
@@ -78,21 +73,10 @@ export const Table = () => {
     };
   });
 
-  console.log({ rows });
-
   return (
-    <Box
-      sx={{
-        height: 600,
-        maxWidth: "100%",
-        margin: "auto",
-        mt: 10,
-      }}
-    >
-      <DataGrid
-        rows={rows}
-        columns={columns(numerator, denominator)}
-      />
-    </Box>
+    <DataGrid
+      rows={rows}
+      columns={columns(numerator, denominator)}
+    />
   );
 };

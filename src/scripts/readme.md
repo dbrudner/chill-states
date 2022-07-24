@@ -1,1 +1,0 @@
-Originally this dir was going to contain a set of scripts to run the app, but having gone with react, the only thing here is the chart implementation which seems like it can be moved somewhere more descriptive.
